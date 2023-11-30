@@ -1,3 +1,9 @@
+// Load tasks from localStorage on page load
+document.addEventListener('DOMContentLoaded', function() {
+     loadTasks();
+    });
+
+
 function addTask() {
     var taskInput = document.getElementById("task");
     var startDateInput = document.getElementById("startDate");
@@ -25,3 +31,17 @@ function addTask() {
     startDateInput.value = "";
     endDateInput.value = "";
 }
+
+    function saveTasks() {
+        const tasks = document.getElementById('tasks-container').innerHTML;
+        localStorage.setItem('tasks', tasks);
+    }
+
+    function loadTasks() {
+        const tasksContainer = document.getElementById('tasks-container');
+        const savedTasks = localStorage.getItem('tasks');
+        if (savedTasks) {
+            tasksContainer.innerHTML = savedTasks;
+        }
+    }
+

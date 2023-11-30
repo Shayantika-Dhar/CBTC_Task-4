@@ -1,47 +1,60 @@
-// Load tasks from localStorage on page load
+// Load tasks from local storage on page load
 document.addEventListener('DOMContentLoaded', function() {
-     loadTasks();
-    });
-
+    loadTasks();
+});
 
 function addTask() {
-    var taskInput = document.getElementById("task");
-    var startDateInput = document.getElementById("startDate");
-    var endDateInput = document.getElementById("endDate");
+    // Get task details from input fields
+    var task = document.getElementById('task').value;
+    var startDate = document.getElementById('startDate').value;
+    var endDate = document.getElementById('endDate').value;
 
-    var task = taskInput.value;
-    var startDate = startDateInput.value;
-    var endDate = endDateInput.value;
+    // Create a task object
+    var newTask = {
+        task: task,
+        startDate: startDate,
+        endDate: endDate
+    };
 
-    if (task === "" || startDate === "" || endDate === "") {
-        alert("Please fill in all fields");
-        return;
-    }
+    // Save the task to local storage
+    saveTask(newTask);
 
-    var tasksContainer = document.getElementById("tasks-container");
-
-    var taskDiv = document.createElement("div");
-    taskDiv.className = "task";
-    taskDiv.innerHTML = `<span>${task}</span>Start Date: ${startDate} | End Date: ${endDate}`;
-    
-    tasksContainer.appendChild(taskDiv);
+    // Add the task to the tasks container
+    displayTask(newTask);
 
     // Clear input fields
-    taskInput.value = "";
-    startDateInput.value = "";
-    endDateInput.value = "";
+    document.getElementById('task').value = '';
+    document.getElementById('startDate').value = '';
+    document.getElementById('endDate').value = '';
 }
 
-    function saveTasks() {
-        const tasks = document.getElementById('tasks-container').innerHTML;
-        localStorage.setItem('tasks', tasks);
-    }
+function saveTask(task) {
+    // Get existing tasks from local storage or initialize an empty array
+    var tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-    function loadTasks() {
-        const tasksContainer = document.getElementById('tasks-container');
-        const savedTasks = localStorage.getItem('tasks');
-        if (savedTasks) {
-            tasksContainer.innerHTML = savedTasks;
-        }
-    }
+    // Add the new task to the array
+    tasks.push(task);
 
+    // Save the updated tasks array back to local storage
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+function loadTasks() {
+    // Get tasks from local storage
+    var tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    // Display each task in the tasks container
+    tasks.forEach(function(task) {
+        displayTask(task);
+    });
+}
+
+function displayTask(task) {
+    // Display the task in the tasks container
+    var tasksContainer = document.getElementById('tasks-container');
+    var taskElement = document.createElement('div');
+    taskElement.innerHTML = '<p><strong>Task:</strong> ' + task.task + '</p>' +
+                            '<p><strong>Start Date:</strong> ' + task.startDate + '</p>' +
+                            '<p><strong>End Date:</strong> ' + task.endDate + '</p>';
+    tasksContainer.appendChild(taskElement);
+}
